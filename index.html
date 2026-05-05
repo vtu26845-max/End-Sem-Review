@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>⚡ TechFest 2026 — Vel Tech University</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
+
+<!-- LEAFLET MAP CSS (Added for functionality) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+<style>
+:root {
+  --cyan: #00e5ff;
+  --violet: #7c3aed;
+  --amber: #f59e0b;
+  --green: #10b981;
+  --red: #ef4444;
+  --bg: #060a12;
+  --surface: #0d1525;
+  --border: #1a2840;
+  --text: #e2eaf5;
+  --muted: #637a99;
+  --faint: #8a9db5;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#0d1525}
+::-webkit-scrollbar-thumb{background:#1a2840;border-radius:3px}
+select option{background:var(--bg);color:var(--text)}
+
+/* ── AMBIENT ── */
+#ambient{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at 15% 20%,rgba(0,229,255,.05) 0%,transparent 50%),
+             radial-gradient(ellipse at 85% 70%,rgba(124,58,237,.07) 0%,transparent 50%)}
+
+/* ── NAVBAR ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  background:rgba(4,8,18,.88);backdrop-filter:blur(22px);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{
+  font-family:'Syne',sans-serif;font-size:19px;font-weight:800;letter-spacing:-.5px;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.nav-links{display:flex;gap:4px}
+.nav-btn{
+  padding:7px 14px;border-radius:6px;font-size:13px;font-weight:500;border:none;
+  background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;
+}
+.nav-btn.active{background:rgba(0,229,255,.1);color:var(--cyan)}
+
+/* ── SECTIONS ── */
+main{padding-top:62px}
+.section{display:none;min-height:calc(100vh - 62px);position:relative;z-index:1}
+.section.active{display:block}
+
+/* ── HERO ── */
+#sec-home{padding:80px 24px 60px;max-width:900px;margin:0 auto;text-align:center}
+.live-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.22);
+  padding:7px 18px;border-radius:30px;margin-bottom:24px;
+  font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.12em;text-transform:uppercase;
+}
+.pulse-dot{width:7px;height:7px;background:var(--cyan);border-radius:50%;animation:pulse 1.8s ease-in-out infinite;display:inline-block}
+.hero-h1{font-family:'Syne',sans-serif;font-size:clamp(42px,8vw,78px);font-weight:800;line-height:1;letter-spacing:-2px;margin-bottom:20px}
+.hero-h1 .line1{display:block;color:#e2eaf5}
+.hero-h1 .line2{display:block;background:linear-gradient(135deg,var(--cyan) 0%,var(--violet) 55%,var(--amber) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-p{font-size:16px;color:var(--muted);max-width:480px;margin:0 auto 36px;line-height:1.7}
+.stats-row{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;padding:24px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:40px}
+.stat-n{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--cyan);display:block}
+.stat-l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.btn-primary{padding:14px 32px;border-radius:10px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--cyan),var(--violet));color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;transition:transform .15s}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-ghost{padding:14px 32px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;background:transparent;color:var(--text);font-size:14px;font-weight:600;transition:all .2s}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* ── EVENTS ── */
+#sec-events{padding:60px 24px;max-width:1100px;margin:0 auto}
+.section-label{display:inline-block;padding:4px 14px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;background:rgba(0,229,255,.1);color:var(--cyan);margin-bottom:10px}
+.section-h{font-family:'Syne',sans-serif;font-size:clamp(26px,4vw,36px);font-weight:800;letter-spacing:-1px;color:#e2eaf5;margin-bottom:28px}
+.tab-bar{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+.tab-btn{padding:11px 22px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.tab-btn.active-tech{border-color:var(--cyan);background:rgba(0,229,255,.1);color:var(--cyan)}
+.tab-btn.active-nt{border-color:var(--amber);background:rgba(245,158,11,.1);color:var(--amber)}
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.event-card{
+  background:var(--surface);border:1.5px solid var(--border);border-radius:12px;
+  padding:20px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;
+}
+.event-card:hover{transform:translateY(-2px)}
+.event-card.selected-tech{background:rgba(0,229,255,.08);border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,.2)}
+.event-card.selected-nt{background:rgba(245,158,11,.08);border-color:var(--amber);box-shadow:0 0 0 3px rgba(245,158,11,.2)}
+.event-card.sold{opacity:.5;cursor:not-allowed}
+.check-badge{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#000;font-weight:700}
+.sold-badge{position:absolute;top:10px;right:10px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+.event-icon{font-size:30px;margin-bottom:10px}
+.event-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#e2eaf5;margin-bottom:4px}
+.event-dept{font-size:11px;color:var(--muted);margin-bottom:8px}
+.event-desc{font-size:12px;color:var(--faint);margin-bottom:12px;line-height:1.5}
+.event-footer{display:flex;align-items:center;justify-content:space-between}
+.price-badge{font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px}
+.price-tech{background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.33);color:var(--cyan)}
+.price-nt{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.33);color:var(--amber)}
+.avail-text{font-size:11px;color:var(--muted)}
+.sel-bar{margin-top:24px;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.15);border-radius:10px;padding:14px 18px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center}
+.sel-chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip-tech{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:rgba(0,229,255,.12);border:1px solid rgba(0,229,255,.2);color:var(--cyan)}
+.chip-nt{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.2);color:var(--amber)}
+
+/* ── BOOKING ── */
+#sec-book{padding:60px 24px;max-width:860px;margin:0 auto}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;position:relative;overflow:hidden}
+.form-top-bar{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--amber))}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.full-col{grid-column:1/-1}
+.field-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.field-input{
+  padding:12px 14px;background:var(--bg);border:1.5px solid var(--border);
+  border-radius:8px;color:var(--text);font-size:14px;outline:none;
+  width:100%;font-family:inherit;transition:border-color .2s;
+}
+.field-input:focus{border-color:var(--cyan)}
+.field-input.error{border-color:var(--red)}
+.field-select{
+  padding:12px 14px;background:var(--bg);border:1.5px solid var(--border);
+  border-radius:8px;color:var(--text);font-size:14px;outline:none;
+  width:100%;font-family:inherit;cursor:pointer;
+}
+.field-select.error{border-color:var(--red)}
+.field-err{font-size:11px;color:var(--red);margin-top:4px}
+.phone-row{display:flex;gap:10px}
+.otp-btn{
+  padding:12px 18px;border-radius:8px;font-size:12px;font-weight:700;
+  cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .2s;
+  background:rgba(0,229,255,.1);border:1.5px solid rgba(0,229,255,.3);color:var(--cyan);
+}
+.otp-btn.verified{background:rgba(16,185,129,.15);border-color:var(--green);color:var(--green);cursor:default}
+.submit-btn{
+  width:100%;margin-top:20px;padding:15px;border-radius:10px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  color:#000;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;transition:transform .15s;
+}
+.submit-btn:hover{transform:translateY(-1px)}
+.reset-btn{
+  width:100%;margin-top:10px;padding:11px;border-radius:8px;cursor:pointer;
+  background:transparent;border:1.5px solid var(--border);color:var(--muted);font-size:13px;font-weight:600;font-family:inherit;
+}
+
+/* ── OTP POPUP (TOP BANNER STYLE) ── */
+#otp-overlay{
+  display:none;position:fixed;top:0;left:0;right:0;z-index:2000;
+  padding:0;
+}
+#otp-overlay.show{display:block}
+.otp-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:2001;
+}
+.otp-panel{
+  position:relative;z-index:2002;
+  background:linear-gradient(135deg,#0d1a2e 0%,#0a1520 100%);
+  border-bottom:2px solid var(--cyan);
+  box-shadow:0 8px 60px rgba(0,229,255,.15),0 2px 20px rgba(0,0,0,.5);
+  padding:28px 32px;max-width:520px;margin:0 auto;
+  border-radius:0 0 20px 20px;
+  animation:slideDown .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+.otp-close{
+  position:absolute;top:12px;right:16px;background:transparent;border:none;
+  color:var(--muted);font-size:22px;cursor:pointer;line-height:1;
+}
+.otp-header{text-align:center;margin-bottom:20px}
+.otp-emoji{font-size:36px;margin-bottom:8px}
+.otp-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#e2eaf5}
+.otp-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.otp-code-display{
+  text-align:center;margin-bottom:16px;
+  background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.15);
+  border-radius:10px;padding:10px;font-size:11px;color:var(--muted);
+}
+.otp-code-val{
+  font-family:'Syne',sans-serif;font-size:28px;font-weight:800;
+  color:var(--cyan);letter-spacing:8px;display:block;margin-top:4px;
+}
+.digits-row{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
+.digit-box{
+  width:52px;height:56px;text-align:center;font-size:24px;font-weight:700;
+  background:var(--bg);border:2px solid var(--border);border-radius:8px;
+  color:var(--cyan);outline:none;font-family:inherit;transition:border-color .2s;
+}
+.digit-box:focus{border-color:var(--cyan)}
+.otp-err{text-align:center;color:var(--red);font-size:12px;margin-bottom:10px}
+.otp-success{text-align:center;color:var(--green);font-size:18px;font-weight:700;padding:10px}
+.otp-verify-btn{
+  width:100%;padding:12px;border-radius:8px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:10px;
+}
+.otp-send-btn{
+  width:100%;padding:13px;border-radius:8px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;
+}
+.otp-resend{text-align:center;font-size:11px;color:var(--muted)}
+.otp-resend span{color:var(--cyan);cursor:pointer;font-weight:600}
+
+/* ── RECEIPT / CONFIRMATION ── */
+#sec-receipt{padding:40px 24px;max-width:800px;margin:0 auto}
+.receipt-card{
+  background:var(--surface);border:1.5px solid var(--green);border-radius:16px;
+  padding:36px;position:relative;overflow:hidden;
+  animation:fadeIn .5s ease both;
+}
+.receipt-bg-check{
+  position:absolute;right:20px;top:-10px;font-size:120px;
+  color:rgba(16,185,129,.05);font-family:'Syne',sans-serif;font-weight:800;line-height:1;pointer-events:none;
+}
+.receipt-header{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.receipt-icon{width:52px;height:52px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.receipt-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green)}
+.receipt-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.receipt-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.receipt-field-label{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.receipt-field-val{font-size:14px;font-weight:600;color:#e2eaf5}
+.receipt-events-label{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.receipt-chips{display:flex;gap:8px;flex-wrap:wrap}
+.receipt-divider{border:none;border-top:2px dashed rgba(255,255,255,.08);margin:20px 0}
+.receipt-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.receipt-total-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.receipt-total-amt{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--green)}
+.receipt-total-date{font-size:11px;color:var(--muted);margin-top:2px}
+.qr-wrap{background:white;border-radius:10px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.qr-label{font-size:10px;color:#666;font-weight:500;text-align:center}
+.booking-id-bar{
+  text-align:center;padding:10px 16px;
+  background:rgba(16,185,129,.08);border-radius:8px;
+  font-size:12px;color:var(--green);margin-top:16px;font-weight:600;letter-spacing:.05em;
+}
+.note-row{margin-top:12px;font-size:12px;color:var(--muted)}
+.download-btn{
+  width:100%;margin-top:20px;padding:14px;border-radius:10px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#10b981,#059669);
+  color:#fff;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .15s;
+}
+.download-btn:hover{transform:translateY(-1px)}
+.new-booking-btn{
+  width:100%;margin-top:10px;padding:13px;border-radius:8px;cursor:pointer;
+  background:transparent;border:1.5px solid var(--green);color:var(--green);
+  font-family:'Syne',sans-serif;font-size:14px;font-weight:700;
+}
+
+/* ── VENUE ── */
+#sec-venue{padding:60px 24px;max-width:900px;margin:0 auto}
+#map{height:380px;border-radius:12px;overflow:hidden;margin-top:20px;border:1px solid var(--border)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:24px;text-align:center;font-size:12px;color:var(--muted);position:relative;z-index:1}
+
+/* ── CHATBOT ── */
+#chat-btn{
+  position:fixed;bottom:24px;right:24px;z-index:800;width:54px;height:54px;border-radius:50%;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  box-shadow:0 4px 24px rgba(0,229,255,.3);transition:transform .2s;
+}
+#chat-btn:hover{transform:scale(1.1)}
+#chatbox{
+  display:none;position:fixed;bottom:88px;right:24px;z-index:800;
+  width:330px;height:460px;background:#0d1525;border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.5);
+}
+#chatbox.open{display:flex}
+.chat-header{
+  padding:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;
+  background:rgba(13,21,37,.9);flex-shrink:0;
+}
+.bot-avatar{width:34px;height:34px;background:linear-gradient(135deg,var(--cyan),var(--violet));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.bot-name{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:#e2eaf5}
+.bot-status{font-size:10px;color:var(--green);display:flex;align-items:center;gap:4px}
+.status-dot{width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block}
+.chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.chat-msg{display:flex;flex-direction:column}
+.chat-msg.user{align-items:flex-end}
+.chat-msg.bot{align-items:flex-start}
+.msg-bubble{
+  max-width:85%;padding:9px 13px;font-size:13px;line-height:1.5;
+}
+.msg-bubble.user{background:linear-gradient(135deg,var(--cyan),var(--violet));color:#000;border-radius:12px 12px 2px 12px}
+.msg-bubble.bot{background:#111c2e;color:#e2eaf5;border-radius:12px 12px 12px 2px}
+.msg-time{font-size:10px;color:var(--muted);margin-top:2px}
+.typing-dots{display:flex;gap:4px;padding:10px 13px;background:#111c2e;border-radius:12px 12px 12px 2px;width:fit-content}
+.typing-dot{width:7px;height:7px;background:var(--muted);border-radius:50%;animation:bounce 1.2s ease-inout infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+.suggestions{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.sugg-btn{padding:5px 12px;border-radius:20px;border:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.06);color:var(--cyan);font-size:11px;font-weight:600;cursor:pointer}
+.chat-input-row{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-shrink:0}
+#chat-input{flex:1;padding:9px 12px;background:#060a12;border:1.5px solid var(--border);border-radius:20px;color:#e2eaf5;font-size:13px;outline:none;font-family:inherit}
+#chat-send{width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--cyan),var(--violet));font-size:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+
+/* ── ANIMATIONS ── */
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes flashGreen{0%{background:rgba(16,185,129,.25)}100%{background:transparent}}
+@keyframes countPop{0%{transform:scale(1.4);color:#10b981}100%{transform:scale(1);color:inherit}}
+
+/* ── BOOKING HISTORY ── */
+#sec-history{padding:60px 24px;max-width:1100px;margin:0 auto}
+.hist-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px}
+.hist-search{padding:10px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;font-family:inherit;width:240px;transition:border-color .2s}
+.hist-search:focus{border-color:var(--cyan)}
+.hist-empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.hist-empty-icon{font-size:52px;margin-bottom:14px}
+.hist-empty-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#e2eaf5;margin-bottom:8px}
+.hist-empty-sub{font-size:14px;color:var(--muted)}
+.hist-table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);background:var(--surface)}
+.hist-table{width:100%;border-collapse:collapse;min-width:720px}
+.hist-table thead tr{background:linear-gradient(90deg,rgba(0,229,255,.06),rgba(124,58,237,.06));border-bottom:1px solid var(--border)}
+.hist-table th{padding:12px 14px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-align:left;white-space:nowrap}
+.hist-table td{padding:13px 14px;font-size:13px;border-bottom:1px solid rgba(26,40,64,.5);vertical-align:middle}
+.hist-table tbody tr:last-child td{border-bottom:none}
+.hist-table tbody tr{transition:background .2s}
+.hist-table tbody tr:hover{background:rgba(255,255,255,.02)}
+.hist-bid{font-family:'Syne',sans-serif;font-size:11px;color:var(--cyan);font-weight:700;letter-spacing:.04em}
+.hist-name{font-weight:600;color:#e2eaf5}
+.hist-phone{font-size:12px;color:var(--muted)}
+.hist-evchips{display:flex;flex-wrap:wrap;gap:5px}
+.hist-evchip{display:inline-block;padding:2px 9px;border-radius:12px;font-size:10px;font-weight:700}
+.hist-evchip.tech{background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);color:var(--cyan)}
+.hist-evchip.nt{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:var(--amber)}
+.hist-total{font-family:'Syne',sans-serif;font-weight:800;color:var(--green)}
+.hist-date{font-size:11px;color:var(--muted)}
+.hist-count-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.18);padding:7px 16px;border-radius:8px;font-size:13px;color:var(--cyan);font-weight:700;margin-bottom:16px}
+
+/* ── TICKET AVAILABILITY DASHBOARD ── */
+.tad-wrap{margin-top:40px}
+.tad-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.tad-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#e2eaf5;display:flex;align-items:center;gap:10px}
+.tad-live{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;color:#10b981;letter-spacing:.1em;text-transform:uppercase}
+.tad-summary{display:flex;gap:16px;flex-wrap:wrap}
+.tad-sum-pill{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.tad-sum-pill strong{color:var(--text);font-weight:700}
+.tad-table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);background:var(--surface)}
+.tad-table{width:100%;border-collapse:collapse;min-width:700px}
+.tad-table thead tr{background:linear-gradient(90deg,rgba(0,229,255,.06),rgba(124,58,237,.06));border-bottom:1px solid var(--border)}
+.tad-table th{padding:12px 14px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-align:left;white-space:nowrap}
+.tad-table th:last-child{text-align:center}
+.tad-table td{padding:13px 14px;font-size:13px;border-bottom:1px solid rgba(26,40,64,.6);vertical-align:middle}
+.tad-table tbody tr:last-child td{border-bottom:none}
+.tad-table tbody tr{transition:background .2s}
+.tad-table tbody tr:hover{background:rgba(255,255,255,.02)}
+.tad-table tbody tr.flash-row{animation:flashGreen .8s ease both}
+
+/* event cell */
+.tad-ev-cell{display:flex;align-items:center;gap:10px}
+.tad-ev-icon{font-size:22px;flex-shrink:0;line-height:1}
+.tad-ev-name{font-weight:700;color:#e2eaf5;font-size:13px}
+.tad-ev-dept{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* category badge */
+.cat-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.cat-tech{background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);color:var(--cyan)}
+.cat-nt{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:var(--amber)}
+
+/* numbers */
+.tad-price{font-weight:700;color:#e2eaf5}
+.tad-total-n{color:var(--muted);font-weight:600}
+.tad-booked-n{font-weight:700}
+.tad-booked-n.has-bookings{color:var(--red)}
+.tad-booked-n.no-bookings{color:var(--muted)}
+.tad-avail-n{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;transition:all .3s}
+.tad-avail-n.high{color:var(--green)}
+.tad-avail-n.mid{color:var(--amber)}
+.tad-avail-n.low{color:var(--red)}
+.tad-avail-n.gone{color:#444;text-decoration:line-through}
+.avail-pop{animation:countPop .4s ease both}
+
+/* status badge */
+.status-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.status-available{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:#10b981}
+.status-filling{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--amber)}
+.status-critical{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+.status-sold{background:rgba(100,100,120,.2);border:1px solid rgba(100,100,120,.3);color:#888}
+
+/* progress bar */
+.tad-progress-cell{min-width:120px;text-align:center}
+.prog-bar-track{width:100%;height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-bottom:4px}
+.prog-bar-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.prog-pct{font-size:10px;color:var(--muted);font-weight:600}
+</style>
+</head>
+<body>
+<div id="ambient"></div>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav>
+  <div class="nav-logo">⚡ TechFest 2026</div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showSection('home',this)">Home</button>
+    <button class="nav-btn" onclick="showSection('events',this)">Events</button>
+    <button class="nav-btn" onclick="showSection('book',this)">Book</button>
+    <button class="nav-btn" onclick="showSection('history',this)">🗂 History</button>
+    <button class="nav-btn" onclick="showSection('venue',this)">Venue</button>
+  </div>
+</nav>
+
+<!-- ═══ OTP OVERLAY (TOP) ═══ -->
+<div id="otp-overlay">
+  <div class="otp-backdrop" onclick="closeOtp()"></div>
+  <div class="otp-panel">
+    <button class="otp-close" onclick="closeOtp()">×</button>
+    <div class="otp-header">
+      <div class="otp-emoji">📱</div>
+      <div class="otp-title">OTP Verification</div>
+      <div class="otp-sub" id="otp-phone-label">Securing your booking</div>
+    </div>
+
+    <!-- Send OTP Step -->
+    <div id="otp-step-send">
+      <button class="otp-send-btn" onclick="doSendOtp()">Send OTP →</button>
+    </div>
+
+    <!-- Enter OTP Step -->
+    <div id="otp-step-enter" style="display:none">
+      <div class="otp-code-display">
+        📲 Demo OTP sent to your number
+        <span class="otp-code-val" id="otp-display-val">----</span>
+        <div style="font-size:10px;color:var(--amber);margin-top:4px">⚠️ Demo mode — code shown for testing</div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px">Enter the 4-digit OTP</div>
+      <div class="digits-row">
+        <input class="digit-box" id="d0" maxlength="1" oninput="handleDigit(0,this)" onkeydown="digitKey(0,event)" />
+        <input class="digit-box" id="d1" maxlength="1" oninput="handleDigit(1,this)" onkeydown="digitKey(1,event)" />
+        <input class="digit-box" id="d2" maxlength="1" oninput="handleDigit(2,this)" onkeydown="digitKey(2,event)" />
+        <input class="digit-box" id="d3" maxlength="1" oninput="handleDigit(3,this)" onkeydown="digitKey(3,event)" />
+      </div>
+      <div class="otp-err" id="otp-err-msg" style="display:none"></div>
+      <button class="otp-verify-btn" onclick="verifyOtp()">Verify OTP</button>
+      <div class="otp-resend" id="otp-resend-row">
+        <span id="otp-timer-text">Resend in 30s</span>
+        <span id="otp-resend-btn" style="display:none" onclick="doSendOtp()">Resend OTP</span>
+      </div>
+    </div>
+
+    <!-- Success -->
+    <div id="otp-step-success" style="display:none">
+      <div class="otp-success">✅ Verified!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<main>
+
+  <!-- HOME -->
+  <div id="sec-home" class="section active">
+    <div style="padding:130px 24px 60px;max-width:900px;margin:0 auto;text-align:center;position:relative;z-index:1">
+      <div class="live-badge"><span class="pulse-dot"></span>Live Registration Open</div>
+      <h1 class="hero-h1">
+        <span class="line1">Vel Tech</span>
+        <span class="line2">TECHFEST 2026</span>
+      </h1>
+      <p class="hero-p">The biggest college tech &amp; cultural fest at Vel Tech University, Avadi, Chennai. Book your seat for Technical and Non-Technical events.</p>
+      <div class="stats-row">
+        <div><span class="stat-n" id="stat-tech">4</span><span class="stat-l">Technical Events</span></div>
+        <div><span class="stat-n" id="stat-nt">6</span><span class="stat-l">Non-Technical Events</span></div>
+        <div><span class="stat-n" id="stat-avail">580+</span><span class="stat-l">Tickets Available</span></div>
+        <div><span class="stat-n" id="stat-days">0</span><span class="stat-l">Days to Go</span></div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn-primary" onclick="showSection('events',document.querySelectorAll('.nav-btn')[1])">Browse Events →</button>
+        <button class="btn-ghost" onclick="showSection('book',document.querySelectorAll('.nav-btn')[2])">Book Now 🎟️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENTS -->
+  <div id="sec-events" class="section">
+    <div style="max-width:1100px;margin:0 auto;padding:60px 24px">
+      <!-- TICKET AVAILABILITY DASHBOARD (Events Section) — top -->
+      <div class="tad-wrap" id="tad-events" style="margin-bottom:36px"></div>
+
+      <div class="section-label">Choose Events</div>
+      <div class="section-h">Select Your <span style="color:var(--cyan)">Programs</span></div>
+      <div class="tab-bar">
+        <button class="tab-btn active-tech" id="tab-tech" onclick="switchTab('tech')">💻 Technical Events</button>
+        <button class="tab-btn" id="tab-nt" onclick="switchTab('nt')">🎉 Non-Technical Events</button>
+      </div>
+      <div class="events-grid" id="events-grid"></div>
+
+      <div id="sel-bar" style="display:none" class="sel-bar">
+        <div>
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:6px">Selected Events</div>
+          <div class="sel-chips" id="sel-chips"></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:4px">Base Total</div>
+          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--cyan)" id="sel-total">₹0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOK -->
+  <div id="sec-book" class="section">
+    <div style="max-width:860px;margin:0 auto;padding:60px 24px">
+      <div class="section-label">Registration</div>
+      <div class="section-h">Book Your <span style="color:var(--cyan)">Tickets</span></div>
+
+      <div id="err-no-events" style="display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red);padding:12px 18px;border-radius:8px;margin-bottom:20px;font-size:13px;font-weight:600">
+        ⚠️ Please select at least one event from the Events section.
+      </div>
+
+      <div id="book-sel-preview" style="display:none;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.15);border-radius:10px;padding:14px 18px;margin-bottom:24px">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:6px">Selected Events</div>
+        <div class="sel-chips" id="book-sel-chips"></div>
+        <div style="margin-top:10px;text-align:right">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:4px">Total</div>
+          <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--cyan)" id="book-total">₹0</div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-top-bar"></div>
+        <div class="form-grid">
+
+          <!-- Name -->
+          <div class="full-col">
+            <div class="field-label">Full Name *</div>
+            <input class="field-input" id="f-name" placeholder="e.g. Arjun Kumar" />
+            <div class="field-err" id="err-name"></div>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <div class="field-label">Email Address *</div>
+            <input class="field-input" id="f-email" placeholder="you@college.edu" type="email" />
+            <div class="field-err" id="err-email"></div>
+          </div>
+
+          <!-- Dept -->
+          <div>
+            <div class="field-label">Department *</div>
+            <select class="field-select" id="f-dept">
+              <option value="">Select Department</option>
+              <option>Computer Science</option><option>Information Technology</option>
+              <option>Electronics &amp; Communication</option><option>Mechanical Engineering</option>
+              <option>Civil Engineering</option><option>Electrical Engineering</option><option>Aerospace Engineering</option><option>Biomedical Engineering</option><option>MBA</option><option>MCA</option><option>Other</option>
+            </select>
+            <div class="field-err" id="err-dept"></div>
+          </div>
+
+          <!-- Year -->
+          <div>
+            <div class="field-label">Year *</div>
+            <select class="field-select" id="f-year">
+              <option value="">Select Year</option>
+              <option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>Faculty/Staff</option>
+            </select>
+            <div class="field-err" id="err-year"></div>
+          </div>
+
+          <!-- Roll -->
+          <div>
+            <div class="field-label">Roll Number *</div>
+            <input class="field-input" id="f-roll" placeholder="e.g. 22UECS001" />
+            <div class="field-err" id="err-roll"></div>
+          </div>
+
+          <!-- College -->
+          <div>
+            <div class="field-label">College *</div>
+            <input class="field-input" id="f-college" placeholder="Your college name" />
+            <div class="field-err" id="err-college"></div>
+          </div>
+
+          <!-- Phone -->
+          <div class="full-col">
+            <div class="field-label">📱 Mobile Number * (OTP Verification)</div>
+            <div class="phone-row">
+              <input class="field-input" id="f-phone" placeholder="+91 9xxxxxxxxx" type="tel" maxlength="13" oninput="resetOtpState()" />
+              <button class="otp-btn" id="otp-trigger-btn" onclick="openOtp()">Send OTP</button>
+            </div>
+            <div class="field-err" id="err-phone"></div>
+            <div class="field-err" id="err-otp"></div>
+            <div id="otp-verified-msg" style="display:none;font-size:12px;color:var(--green);margin-top:6px;font-weight:600">✅ Phone verified successfully</div>
+          </div>
+
+          <!-- Tickets -->
+          <div class="full-col">
+            <div class="field-label">Number of Tickets *</div>
+            <input class="field-input" id="f-tickets" type="number" min="1" max="5" value="1" oninput="updateTotal()" />
+            <div style="font-size:11px;color:var(--muted);margin-top:4px">Max 5 tickets per booking</div>
+            <div class="field-err" id="err-tickets"></div>
+            <div id="cost-preview" style="display:none;margin-top:10px;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.12);border-radius:8px;padding:10px 14px;font-size:12px;color:#8ab4d0"></div>
+          </div>
+
+          <!-- Note -->
+          <div class="full-col">
+            <div class="field-label">Special Requests (Optional)</div>
+            <input class="field-input" id="f-note" placeholder="e.g. Wheelchair accessibility, dietary needs..." />
+          </div>
+        </div>
+
+        <button class="submit-btn" onclick="handleSubmit()">🎟️ Confirm Booking</button>
+        <button class="reset-btn" onclick="resetForm()">↺ Reset Form</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECEIPT -->
+  <div id="sec-receipt" class="section">
+    <div class="receipt-card" id="receipt-card">
+      <div class="receipt-bg-check">✓</div>
+      <div class="receipt-header">
+        <div class="receipt-icon">✓</div>
+        <div>
+          <div class="receipt-title">Booking Confirmed!</div>
+          <div class="receipt-sub">Your seat is reserved. Save your booking ID.</div>
+        </div>
+      </div>
+      <div class="receipt-grid" id="receipt-grid"></div>
+      <div class="full-col" id="receipt-events-wrap">
+        <div class="receipt-events-label">Events Booked</div>
+        <div class="receipt-chips" id="receipt-event-chips"></div>
+      </div>
+      <hr class="receipt-divider" />
+      <div class="receipt-bottom">
+        <div>
+          <div class="receipt-total-label">Total Amount</div>
+          <div class="receipt-total-amt" id="receipt-total">₹0</div>
+          <div class="receipt-total-date" id="receipt-date"></div>
+        </div>
+        <div class="qr-wrap" id="receipt-qr">
+          <svg id="qr-svg" width="120" height="120" viewBox="0 0 120 120"></svg>
+          <div class="qr-label">Scan at entry gate</div>
+        </div>
+      </div>
+      <div class="booking-id-bar" id="booking-id-bar">Booking ID: —</div>
+      <div class="note-row" id="receipt-note" style="display:none"></div>
+      <button class="download-btn" onclick="downloadReceipt()">⬇️ Download Ticket Receipt (HTML)</button>
+      <button class="new-booking-btn" onclick="newBooking()">+ New Booking</button>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div id="sec-history" class="section">
+    <div class="section-label">Booking History</div>
+    <div class="section-h">Your <span style="color:var(--cyan)">Past Bookings</span></div>
+    <div class="hist-toolbar">
+      <input class="hist-search" id="hist-search" placeholder="🔍  Search by name, ID, phone…" oninput="renderHistory()" />
+    </div>
+    <div id="hist-body"></div>
+  </div>
+
+  <!-- VENUE -->
+  <div id="sec-venue" class="section">
+    <div style="max-width:900px;margin:0 auto;padding:60px 24px">
+      <div class="section-label">Venue</div>
+      <div class="section-h">Find <span style="color:var(--cyan)">Us Here</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;flex-wrap:wrap">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px">
+          <div style="font-size:24px;margin-bottom:8px">📍</div>
+          <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#e2eaf5;margin-bottom:4px">Address</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px">Vel Tech Rangarajan Dr.Sagunthala<br>R&amp;D Institute of Science and Technology<br>Avadi, Chennai, Tamil Nadu – 600062</div>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=Vel+Tech+Rangarajan+Dr+Sagunthala+R%26D+Institute+of+Science+and+Technology&destination_place_id=ChIJhRe5eMpnUjoRidHmkCOFI5Q" target="_blank" rel="noopener noreferrer"
+            style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;
+                   background:linear-gradient(135deg,#00e5ff,#7c3aed);color:#000;font-weight:800;
+                   font-size:12px;font-family:'Syne',sans-serif;text-decoration:none;
+                   letter-spacing:.04em;transition:transform .15s;box-shadow:0 4px 16px rgba(0,229,255,.25)"
+            onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            Get Directions on Google Maps
+          </a>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px">
+          <div style="font-size:24px;margin-bottom:8px">📅</div>
+          <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#e2eaf5;margin-bottom:4px">Date & Time</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6">20–21 May 2026<br>9:00 AM to 6:00 PM</div>
+        </div>
+      </div>
+      <div id="map"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  ⚡ TechFest 2026 · Vel Tech University, Avadi, Chennai &nbsp;|&nbsp; techfest@veltech.edu.in &nbsp;|&nbsp; +91 98765 43210
+</footer>
+
+<!-- CHATBOT -->
+<button id="chat-btn" onclick="toggleChat()">🤖</button>
+<div id="chatbox">
+  <div class="chat-header">
+    <div class="bot-avatar">🤖</div>
+    <div>
+      <div class="bot-name">FestBot</div>
+      <div class="bot-status"><span class="status-dot"></span>Online</div>
+    </div>
+  </div>
+  <div class="chat-messages" id="chat-msgs"></div>
+  <div class="chat-input-row">
+    <input id="chat-input" placeholder="Ask FestBot…" onkeydown="if(event.key==='Enter')sendChat()" />
+    <button id="chat-send" onclick="sendChat()">→</button>
+  </div>
+</div>
+
+<!-- LEAFLET JS (Added for functionality) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════
+const TECH_EVENTS = [
+  {id:"t1",icon:"🧠",name:"Tech Quiz",type:"tech",dept:"CSE/IT",price:50,total:100,desc:"MCQ & buzzer rounds testing CS, aptitude & GK."},
+  {id:"t2",icon:"💻",name:"Hackathon",type:"tech",dept:"All Depts",price:150,total:60,desc:"24-hr coding challenge. Teams of 2–4. Prizes ₹50K!"},
+  {id:"t3",icon:"🔍",name:"Tech Scavenger Hunt",type:"tech",dept:"All Depts",price:80,total:80,desc:"Campus-wide hunt with tech clues. Teams of 2–3."},
+  {id:"t4",icon:"📄",name:"Paper Presentation",type:"tech",dept:"All Depts",price:100,total:50,desc:"Submit abstract; expert panel judging. Open to all."},
+];
+const NT_EVENTS = [
+  {id:"n1",icon:"🎮",name:"BGMI Tournament",type:"nt",dept:"All Depts",price:100,total:80,desc:"Squad (4-player) knockout format. Prizes for top 3!"},
+  {id:"n2",icon:"🔥",name:"Free Fire",type:"nt",dept:"All Depts",price:80,total:80,desc:"Squad of 4. Multiple knockout rounds."},
+  {id:"n3",icon:"🏏",name:"Cricket",type:"nt",dept:"All Depts",price:120,total:110,desc:"Indoor 6-a-side cricket. Exciting shorter format!"},
+  {id:"n4",icon:"♟️",name:"Chess",type:"nt",dept:"All Depts",price:50,total:80,desc:"Rapid + Blitz formats. Open to all skill levels."},
+  {id:"n5",icon:"⚽",name:"Football (5-a-side)",type:"nt",dept:"All Depts",price:120,total:12,desc:"5-a-side knockout. Prizes for winner & runner-up."},
+  {id:"n6",icon:"👗",name:"Fashion Walk",type:"nt",dept:"All Depts",price:80,total:40,desc:"Individual & group categories. Industry judges!"},
+];
+const ALL_EVENTS = [...TECH_EVENTS,...NT_EVENTS];
+
+// State — restore availability from localStorage so booked counts persist across sessions
+const AVAIL_KEY = 'techfest2026_availMap';
+function loadAvailMap(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(AVAIL_KEY)||'null');
+    if(saved) return saved;
+  } catch(e){}
+  return Object.fromEntries(ALL_EVENTS.map(e=>[e.id,e.total]));
+}
+const availMap = loadAvailMap();
+let selectedEvents = [];
+let currentTab = "tech";
+let otpVerified = false;
+let currentOtp = "";
+let otpTimer = null;
+let lastBooking = null;
+
+// ══════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════
+function showSection(name, btn) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(name==='events'){ renderEvents(); renderDashboards(); }
+  if(name==='book'){ syncBookingPreview(); }
+  if(name==='history'){ renderHistory(); }
+  if(name==='venue') initMap();
+}
+
+// ══════════════════════════════════════════════
+//  COUNTDOWN
+// ══════════════════════════════════════════════
+(function(){
+  const fest=new Date("2026-05-20");
+  const diff=Math.max(0,Math.ceil((fest-new Date())/86400000));
+  document.getElementById('stat-days').textContent=diff;
+})();
+
+// ══════════════════════════════════════════════
+//  EVENTS
+// ══════════════════════════════════════════════
+function switchTab(tab){
+  currentTab=tab;
+  document.getElementById('tab-tech').className='tab-btn'+(tab==='tech'?' active-tech':'');
+  document.getElementById('tab-nt').className='tab-btn'+(tab==='nt'?' active-nt':'');
+  renderEvents();
+}
+
+function renderEvents(){
+  const evs=currentTab==='tech'?TECH_EVENTS:NT_EVENTS;
+  const g=document.getElementById('events-grid');
+  g.innerHTML=evs.map(ev=>{
+    const isNT=ev.type==='nt';
+    const avail=availMap[ev.id];
+    const sold=avail<=0;
+    const sel=selectedEvents.includes(ev.id);
+    let cls='event-card';
+    if(sold) cls+=' sold';
+    else if(sel) cls+=isNT?' selected-nt':' selected-tech';
+    const accent=isNT?'var(--amber)':'var(--cyan)';
+    return `<div class="${cls}" onclick="toggleEvent('${ev.id}','${ev.type}',${sold})">
+      ${sel?`<div class="check-badge" style="background:${accent}">✓</div>`:''}
+      ${sold?`<div class="sold-badge">SOLD OUT</div>`:''}
+      <div class="event-icon">${ev.icon}</div>
+      <div class="event-name">${ev.name}</div>
+      <div class="event-dept">${ev.dept}</div>
+      <div class="event-desc">${ev.desc}</div>
+      <div class="event-footer">
+        <span class="price-badge price-${ev.type}">₹${ev.price}</span>
+        <span class="avail-text">${avail} left</span>
+      </div>
+    </div>`;
+  }).join('');
+  updateSelBar();
+  // Update home stat
+  const totalAvail=ALL_EVENTS.reduce((s,e)=>s+availMap[e.id],0);
+  const el=document.getElementById('stat-avail');
+  if(el) el.textContent=totalAvail+'+';
+}
+
+function toggleEvent(id,type,sold){
+  if(sold)return;
+  if(selectedEvents.includes(id)){
+    selectedEvents=selectedEvents.filter(x=>x!==id);
+  } else {
+    selectedEvents.push(id);
+  }
+  renderEvents();
+}
+
+function updateSelBar(){
+  const bar=document.getElementById('sel-bar');
+  const chips=document.getElementById('sel-chips');
+  const total=document.getElementById('sel-total');
+  if(selectedEvents.length===0){bar.style.display='none';return;}
+  bar.style.display='flex';
+  const sum=selectedEvents.reduce((s,id)=>{const e=ALL_EVENTS.find(x=>x.id===id);return s+(e?e.price:0);},0);
+  total.textContent='₹'+sum;
+  chips.innerHTML=selectedEvents.map(id=>{
+    const e=ALL_EVENTS.find(x=>x.id===id);
+    return `<span class="chip-${e.type}">${e.icon} ${e.name}</span>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+//  OTP — TOP POPUP
+// ══════════════════════════════════════════════
+function openOtp(){
+  const phone=document.getElementById('f-phone').value.trim();
+  if(!phone||!/^\+?[0-9]{10,13}$/.test(phone.replace(/\s/g,''))){
+    showErr('phone','Enter a valid phone number first');return;
+  }
+  document.getElementById('otp-phone-label').textContent='Securing your booking for '+phone;
+  // Reset steps
+  document.getElementById('otp-step-send').style.display='block';
+  document.getElementById('otp-step-enter').style.display='none';
+  document.getElementById('otp-step-success').style.display='none';
+  document.getElementById('otp-err-msg').style.display='none';
+  clearDigits();
+  document.getElementById('otp-overlay').classList.add('show');
+}
+
+function closeOtp(){
+  document.getElementById('otp-overlay').classList.remove('show');
+  clearInterval(otpTimer);
+}
+
+function doSendOtp(){
+  // Generate fresh OTP every time
+  currentOtp=String(Math.floor(1000+Math.random()*9000));
+  document.getElementById('otp-display-val').textContent=currentOtp;
+  document.getElementById('otp-step-send').style.display='none';
+  document.getElementById('otp-step-enter').style.display='block';
+  document.getElementById('otp-err-msg').style.display='none';
+  clearDigits();
+  startOtpTimer();
+  setTimeout(()=>document.getElementById('d0').focus(),100);
+}
+
+function startOtpTimer(){
+  let t=30;
+  document.getElementById('otp-timer-text').style.display='inline';
+  document.getElementById('otp-resend-btn').style.display='none';
+  document.getElementById('otp-timer-text').textContent='Resend in '+t+'s';
+  clearInterval(otpTimer);
+  otpTimer=setInterval(()=>{
+    t--;
+    if(t<=0){
+      clearInterval(otpTimer);
+      document.getElementById('otp-timer-text').style.display='none';
+      document.getElementById('otp-resend-btn').style.display='inline';
+    } else {
+      document.getElementById('otp-timer-text').textContent='Resend in '+t+'s';
+    }
+  },1000);
+}
+
+function clearDigits(){
+  for(let i=0;i<4;i++){
+    const el=document.getElementById('d'+i);
+    if(el) el.value='';
+  }
+}
+
+function handleDigit(i,el){
+  if(!/^\d?$/.test(el.value)){el.value='';return;}
+  if(el.value&&i<3) document.getElementById('d'+(i+1)).focus();
+}
+
+function digitKey(i,e){
+  if(e.key==='Backspace'&&!document.getElementById('d'+i).value&&i>0){
+    document.getElementById('d'+(i-1)).focus();
+  }
+}
+
+function verifyOtp(){
+  const entered=[0,1,2,3].map(i=>document.getElementById('d'+i).value).join('');
+  if(entered.length<4){showOtpErr('Enter all 4 digits');return;}
+  if(entered===currentOtp){
+    clearInterval(otpTimer);
+    document.getElementById('otp-step-enter').style.display='none';
+    document.getElementById('otp-step-success').style.display='block';
+    otpVerified=true;
+    // Update trigger button
+    const btn=document.getElementById('otp-trigger-btn');
+    btn.textContent='✓ Verified';
+    btn.className='otp-btn verified';
+    btn.disabled=true;
+    document.getElementById('otp-verified-msg').style.display='block';
+    document.getElementById('err-otp').textContent='';
+    setTimeout(closeOtp,900);
+  } else {
+    showOtpErr('❌ Incorrect OTP. Try again.');
+    clearDigits();
+    document.getElementById('d0').focus();
+  }
+}
+
+function showOtpErr(msg){
+  const el=document.getElementById('otp-err-msg');
+  el.textContent=msg;
+  el.style.display='block';
+}
+
+function resetOtpState(){
+  otpVerified=false;
+  currentOtp='';
+  const btn=document.getElementById('otp-trigger-btn');
+  btn.textContent='Send OTP';
+  btn.className='otp-btn';
+  btn.disabled=false;
+  document.getElementById('otp-verified-msg').style.display='none';
+}
+
+// ══════════════════════════════════════════════
+//  BOOKING FORM
+// ══════════════════════════════════════════════
+function syncBookingPreview(){
+  const wrap=document.getElementById('book-sel-preview');
+  const chips=document.getElementById('book-sel-chips');
+  const total=document.getElementById('book-total');
+  if(selectedEvents.length===0){wrap.style.display='none';}
+  else{
+    wrap.style.display='block';
+    chips.innerHTML=selectedEvents.map(id=>{
+      const e=ALL_EVENTS.find(x=>x.id===id);
+      return `<span class="chip-${e.type}">${e.icon} ${e.name}</span>`;
+    }).join('');
+    updateTotal();
+  }
+}
+
+function updateTotal(){
+  const tix=parseInt(document.getElementById('f-tickets').value)||0;
+  const evTotal=selectedEvents.reduce((s,id)=>{const e=ALL_EVENTS.find(x=>x.id===id);return s+(e?e.price:0);},0);
+  const grand=evTotal*tix;
+  document.getElementById('book-total').textContent='₹'+grand.toLocaleString('en-IN');
+  const prev=document.getElementById('cost-preview');
+  if(selectedEvents.length>0&&tix>0){
+    prev.style.display='block';
+    prev.innerHTML=`💰 ${selectedEvents.length} event${selectedEvents.length>1?'s':''} × ${tix} ticket${tix>1?'s':''} = <strong style="color:var(--cyan)">₹${grand.toLocaleString('en-IN')}</strong>`;
+  } else prev.style.display='none';
+}
+
+function showErr(id,msg){
+  const el=document.getElementById('err-'+id);
+  if(el){el.textContent=msg;}
+  const input=document.getElementById('f-'+id);
+  if(input) input.classList.add('error');
+}
+function clearErr(id){
+  const el=document.getElementById('err-'+id);
+  if(el) el.textContent='';
+  const input=document.getElementById('f-'+id);
+  if(input) input.classList.remove('error');
+}
+
+function validate(){
+  let ok=true;
+  const name=document.getElementById('f-name').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const dept=document.getElementById('f-dept').value;
+  const year=document.getElementById('f-year').value;
+  const roll=document.getElementById('f-roll').value.trim();
+  const college=document.getElementById('f-college').value.trim();
+  const phone=document.getElementById('f-phone').value.trim();
+  const tix=parseInt(document.getElementById('f-tickets').value)||0;
+
+  if(!name){showErr('name','Full name is required');ok=false;}else clearErr('name');
+  if(!email){showErr('email','Email is required');ok=false;}
+  else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showErr('email','Enter a valid email');ok=false;}
+  else clearErr('email');
+  if(!dept){showErr('dept','Department is required');ok=false;}else clearErr('dept');
+  if(!year){showErr('year','Year is required');ok=false;}else clearErr('year');
+  if(!roll){showErr('roll','Roll number is required');ok=false;}else clearErr('roll');
+  if(!college){showErr('college','College name is required');ok=false;}else clearErr('college');
+  if(!phone){showErr('phone','Phone number is required');ok=false;}
+  else if(!/^\+?[0-9]{10,13}$/.test(phone.replace(/\s/g,''))){showErr('phone','Enter a valid phone number');ok=false;}
+  else clearErr('phone');
+  if(tix<1){showErr('tickets','At least 1 ticket required');ok=false;}
+  else if(tix>5){showErr('tickets','Maximum 5 tickets per booking');ok=false;}
+  else clearErr('tickets');
+  if(selectedEvents.length===0){document.getElementById('err-no-events').style.display='block';ok=false;}
+  else document.getElementById('err-no-events').style.display='none';
+  if(!otpVerified){showErr('otp','Please verify your phone number with OTP');ok=false;}
+  else clearErr('otp');
+  return ok;
+}
+
+function genBookingId(){
+  return "TF26-"+Math.random().toString(36).toUpperCase().slice(2,7)+"-"+Date.now().toString().slice(-4);
+}
+
+function handleSubmit(){
+  if(!validate()) return;
+  const tix=parseInt(document.getElementById('f-tickets').value);
+  const events=selectedEvents.map(id=>ALL_EVENTS.find(e=>e.id===id));
+  const evTotal=events.reduce((s,e)=>s+e.price,0);
+  const grand=evTotal*tix;
+  const booking={
+    id:genBookingId(),
+    name:document.getElementById('f-name').value.trim(),
+    email:document.getElementById('f-email').value.trim(),
+    dept:document.getElementById('f-dept').value,
+    year:document.getElementById('f-year').value,
+    roll:document.getElementById('f-roll').value.trim(),
+    college:document.getElementById('f-college').value.trim(),
+    phone:document.getElementById('f-phone').value.trim(),
+    tickets:tix,
+    events:events,
+    total:grand,
+    note:document.getElementById('f-note').value.trim(),
+    bookedAt:new Date().toLocaleString('en-IN')
+  };
+  lastBooking=booking;
+  // Save to persistent history
+  saveBookingToHistory(booking);
+  // Decrement availability
+  const bookedIds=[...selectedEvents];
+  selectedEvents.forEach(id=>{availMap[id]=Math.max(0,(availMap[id]||0)-tix);});
+  // Persist updated availability so dashboard reflects correctly after page reload
+  localStorage.setItem(AVAIL_KEY, JSON.stringify(availMap));
+  selectedEvents=[];
+  renderDashboards(bookedIds);
+  showReceipt(booking);
+}
+
+function resetForm(){
+  ['name','email','roll','college','phone','note'].forEach(id=>{
+    const el=document.getElementById('f-'+id);
+    if(el) el.value='';
+  });
+  document.getElementById('f-dept').value='';
+  document.getElementById('f-year').value='';
+  document.getElementById('f-tickets').value='1';
+  ['name','email','dept','year','roll','college','phone','tickets','otp'].forEach(clearErr);
+  document.getElementById('err-no-events').style.display='none';
+  resetOtpState();
+  syncBookingPreview();
+}
+
+// ══════════════════════════════════════════════
+//  RECEIPT
+// ══════════════════════════════════════════════
+function showReceipt(b){
+  // Hide book section, show receipt
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+  document.getElementById('sec-receipt').classList.add('active');
+
+  // Populate grid
+  const fields=[
+    ['Name',b.name],['Email',b.email],
+    ['Roll Number',b.roll],['Department',b.dept],
+    ['Year',b.year],['College',b.college],
+    ['Phone',b.phone],['Tickets',b.tickets],
+  ];
+  document.getElementById('receipt-grid').innerHTML=fields.map(([l,v])=>`
+    <div>
+      <div class="receipt-field-label">${l}</div>
+      <div class="receipt-field-val">${v}</div>
+    </div>
+  `).join('');
+
+  // Events
+  document.getElementById('receipt-event-chips').innerHTML=b.events.map(ev=>`
+    <span class="chip-${ev.type}">${ev.icon} ${ev.name} — ₹${ev.price}</span>
+  `).join('');
+
+  document.getElementById('receipt-total').textContent='₹'+b.total.toLocaleString('en-IN');
+  document.getElementById('receipt-date').textContent=b.bookedAt;
+  document.getElementById('booking-id-bar').textContent='Booking ID: '+b.id;
+
+  if(b.note){
+    document.getElementById('receipt-note').style.display='block';
+    document.getElementById('receipt-note').textContent='📝 Special Request: '+b.note;
+  }
+
+  // QR
+  drawQR(b.id+'|'+b.name+'|'+b.tickets);
+}
+
+function drawQR(value){
+  const svg=document.getElementById('qr-svg');
+  const n=21,size=120,cell=size/n;
+  let hash=0;
+  for(let i=0;i<value.length;i++) hash=((hash<<5)-hash)+value.charCodeAt(i)|0;
+  const rng=i=>Math.abs(Math.sin(hash+i*9301+49297))>0.45;
+  let cells='<rect width="120" height="120" fill="white"/>';
+  for(let r=0;r<n;r++) for(let c=0;c<n;c++){
+    const inFinder=(r<7&&c<7)||(r<7&&c>13)||(r>13&&c<7);
+    if(!inFinder&&rng(r*n+c)){
+      cells+=`<rect x="${c*cell}" y="${r*cell}" width="${cell}" height="${cell}" fill="#000"/>`;
+    }
+  }
+  [[0,0],[0,14],[14,0]].forEach(([r,c])=>{
+    cells+=`<rect x="${c*cell}" y="${r*cell}" width="${7*cell}" height="${7*cell}" fill="none" stroke="#000" stroke-width="${cell}"/>`;
+    cells+=`<rect x="${(c+2)*cell}" y="${(r+2)*cell}" width="${3*cell}" height="${3*cell}" fill="#000"/>`;
+  });
+  svg.innerHTML=cells;
+}
+
+function newBooking(){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+  document.getElementById('sec-book').classList.add('active');
+  document.querySelectorAll('.nav-btn')[2].classList.add('active');
+  resetForm();
+  lastBooking=null;
+}
+
+// ══════════════════════════════════════════════
+//  DOWNLOAD RECEIPT AS HTML
+// ══════════════════════════════════════════════
+function downloadReceipt(){
+  if(!lastBooking) return;
+  const b=lastBooking;
+  const qrSvg=document.getElementById('qr-svg').outerHTML;
+  const evRows=b.events.map(ev=>`<tr>
+    <td style="padding:8px 12px;border-bottom:1px solid #eee">${ev.icon} ${ev.name}</td>
+    <td style="padding:8px 12px;border-bottom:1px solid #eee">${ev.type==='tech'?'Technical':'Non-Technical'}</td>
+    <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right">₹${ev.price} × ${b.tickets} = ₹${(ev.price*b.tickets).toLocaleString('en-IN')}</td>
+  </tr>`).join('');
+
+  const html=`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>TechFest 2026 — Ticket Receipt · ${b.id}</title>
+<style>
+  body{font-family:'Segoe UI',Arial,sans-serif;background:#f3f7ff;margin:0;padding:32px;color:#1a2340}
+  .ticket{background:#fff;max-width:700px;margin:0 auto;border-radius:18px;overflow:hidden;box-shadow:0 8px 40px rgba(0,80,200,.12)}
+  .ticket-header{background:linear-gradient(135deg,#003a70 0%,#1a0060 60%,#00aacc 100%);color:#fff;padding:32px 36px;position:relative}
+  .ticket-header h1{font-size:28px;margin:0 0 6px;letter-spacing:-1px}
+  .ticket-header p{margin:0;opacity:.75;font-size:13px}
+  .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:12px;letter-spacing:.1em}
+  .ticket-body{padding:32px 36px}
+  .confirmed-row{display:flex;align-items:center;gap:12px;background:#f0fdf4;border:1.5px solid #10b981;border-radius:10px;padding:14px 18px;margin-bottom:24px}
+  .confirmed-icon{width:38px;height:38px;background:#10b981;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0}
+  .confirmed-title{font-weight:800;color:#059669;font-size:16px}
+  .confirmed-sub{font-size:12px;color:#6b7280;margin-top:2px}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+  .info-cell{}
+  .info-label{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#9ca3af;margin-bottom:4px}
+  .info-val{font-size:14px;font-weight:600;color:#1a2340}
+  table{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px}
+  th{background:#f8faff;text-align:left;padding:10px 12px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6b7280;border-bottom:2px solid #e5e7eb}
+  .totals-row{background:#f0f9ff}
+  .grand{font-size:22px;font-weight:800;color:#059669}
+  .booking-id-box{text-align:center;background:#f0fdf4;border:1.5px dashed #10b981;border-radius:8px;padding:12px;font-size:13px;font-weight:700;color:#059669;margin:20px 0;letter-spacing:.05em}
+  .qr-section{text-align:center;margin-bottom:20px}
+  .qr-section p{font-size:11px;color:#9ca3af;margin-top:6px}
+  .footer-note{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:12px 16px;font-size:12px;color:#92400e;margin-top:20px}
+  .ticket-footer{background:#f8faff;padding:16px 36px;text-align:center;font-size:11px;color:#9ca3af;border-top:1px solid #e5e7eb}
+  @media print{body{padding:0;background:#fff}.ticket{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="ticket">
+  <div class="ticket-header">
+    <div class="badge">⚡ OFFICIAL TICKET</div>
+    <h1>TechFest 2026</h1>
+    <p>Vel Tech University · Avadi, Chennai, Tamil Nadu 600062</p>
+    <p style="margin-top:6px">📅 20–21 May 2026 &nbsp;·&nbsp; ⏰ 9:00 AM – 6:00 PM</p>
+  </div>
+  <div class="ticket-body">
+    <div class="confirmed-row">
+      <div class="confirmed-icon">✓</div>
+      <div>
+        <div class="confirmed-title">Booking Confirmed!</div>
+        <div class="confirmed-sub">Your seat is reserved. Carry this receipt to the venue.</div>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-cell"><div class="info-label">Full Name</div><div class="info-val">${b.name}</div></div>
+      <div class="info-cell"><div class="info-label">Email</div><div class="info-val">${b.email}</div></div>
+      <div class="info-cell"><div class="info-label">Roll Number</div><div class="info-val">${b.roll}</div></div>
+      <div class="info-cell"><div class="info-label">Department</div><div class="info-val">${b.dept}</div></div>
+      <div class="info-cell"><div class="info-label">Year</div><div class="info-val">${b.year}</div></div>
+      <div class="info-cell"><div class="info-label">College</div><div class="info-val">${b.college}</div></div>
+      <div class="info-cell"><div class="info-label">Phone</div><div class="info-val">${b.phone}</div></div>
+      <div class="info-cell"><div class="info-label">Tickets</div><div class="info-val">${b.tickets} Person${b.tickets>1?'s':''}</div></div>
+    </div>
+
+    <table>
+      <thead><tr><th>Event</th><th>Category</th><th style="text-align:right">Amount</th></tr></thead>
+      <tbody>${evRows}</tbody>
+      <tfoot>
+        <tr class="totals-row">
+          <td colspan="2" style="padding:12px;font-weight:700;font-size:13px">Grand Total</td>
+          <td style="padding:12px;text-align:right" class="grand">₹${b.total.toLocaleString('en-IN')}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="booking-id-box">🎟️ Booking ID: ${b.id}</div>
+    <div style="font-size:11px;color:#9ca3af;text-align:center;margin-top:-10px;margin-bottom:16px">Booked on: ${b.bookedAt}</div>
+
+    <div class="qr-section">
+      ${qrSvg.replace('width="120"','width="140"').replace('height="120"','height="140"')}
+      <p>Scan this QR code at the entry gate</p>
+    </div>
+
+    ${b.note?`<div class="footer-note">📝 <strong>Special Request:</strong> ${b.note}</div>`:''}
+
+    <div class="footer-note" style="background:#eff6ff;border-color:#bfdbfe;color:#1e40af;margin-top:12px">
+      ℹ️ <strong>Important:</strong> Tickets are non-refundable after confirmation. Transfers allowed before May 15. 
+      Contact: techfest@veltech.edu.in · +91 98765 43210
+    </div>
+  </div>
+  <div class="ticket-footer">
+    ⚡ TechFest 2026 · Vel Tech University &nbsp;|&nbsp; techfest@veltech.edu.in &nbsp;|&nbsp; +91 98765 43210
+  </div>
+</div>
+</body>
+</html>`;
+
+  const blob=new Blob([html],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='TechFest2026_Receipt_'+b.id+'.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ═══════════════════════════════════════════════════
+   MAP
+═══════════════════════════════════════════════════ */
+let mapInitialized = false;
+function initMap() {
+  if (mapInitialized) return;
+  // Vel Tech University, Avadi, Chennai
+  const lat = 13.175813176735641, lng = 80.09831940647132;
+  const map = L.map('map').setView([lat, lng], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  const customIcon = L.divIcon({
+    html: `<div style="background:linear-gradient(135deg,#00e5ff,#7c3aed);width:40px;height:40px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 4px 16px rgba(0,229,255,0.5);display:flex;align-items:center;justify-content:center;">
+      <span style="transform:rotate(45deg);font-size:18px;">⚡</span>
+    </div>`,
+    className:'',iconSize:[40,40],iconAnchor:[20,40],popupAnchor:[0,-44]
+  });
+
+  L.marker([lat,lng],{icon:customIcon})
+    .addTo(map)
+    .bindPopup(`
+      <div style="font-family:sans-serif;min-width:180px;">
+        <strong style="font-size:14px;">⚡ TechFest 2026</strong><br>
+        <span style="font-size:12px;color:#666;">Vel Tech University</span><br>
+        <span style="font-size:12px;color:#666;">Avadi, Chennai, Tamil Nadu</span><br>
+        <a href="https://maps.google.com/?q=13.175813176735641, 80.09831940647132" target="_blank" 
+           style="font-size:12px;color:#00e5ff;text-decoration:none;font-weight:600;">
+          📍 Get Directions →
+        </a>
+      </div>
+    `)
+    .openPopup();
+
+  // Nearby circles
+  L.circle([lat,lng],{color:'rgba(0,229,255,0.3)',fillColor:'rgba(0,229,255,0.05)',fillOpacity:1,radius:200}).addTo(map);
+  
+  mapInitialized = true;
+}
+
+// ══════════════════════════════════════════════
+//  CHATBOT
+// ══════════════════════════════════════════════
+const BOT_KB=[
+  {keys:["hello","hi","hey"],reply:"👋 Hey! I'm **FestBot**, your TechFest 2026 guide. Ask me about events, booking, prices, or venue!"},
+  {keys:["event","program","list"],reply:"🎯 **Technical:** Quiz ₹50 · Hackathon ₹150 · Scavenger Hunt ₹80 · Paper Presentation ₹100\n\n🎉 **Non-Technical:** BGMI ₹100 · Free Fire ₹80 · Box Cricket ₹120 · Chess ₹50 · Football ₹120 · Fashion Walk ₹80"},
+  {keys:["price","cost","fee","how much"],reply:"💰 Prices range ₹50–₹150. Book multiple events in one go!"},
+  {keys:["book","register","how to"],reply:"📝 Steps: 1) Select events  2) Fill your details  3) Verify phone OTP  4) Click Confirm Booking ✓"},
+  {keys:["otp","verify","phone"],reply:"📱 OTP secures your booking. Enter your number, tap Send OTP, then enter the 4-digit code."},
+  {keys:["venue","location","where"],reply:"📍 Vel Tech University, Avadi, Chennai, Tamil Nadu – 600062. Check the Venue tab for the map!"},
+  {keys:["date","when","time","schedule"],reply:"📅 TechFest 2026 — 20–21 May 2026. ⏰ 9:00 AM to 6:00 PM both days."},
+  {keys:["hackathon"],reply:"💻 Hackathon: 24-hour coding challenge. Teams of 2–4. ₹150/person. Prizes ₹50,000!"},
+  {keys:["quiz"],reply:"🧠 Tech Quiz: MCQ & buzzer rounds. Individual. ₹50. Tests CS, aptitude & GK."},
+  {keys:["bgmi","pubg"],reply:"🎮 BGMI: Squad (4-player) knockout. ₹100/person. Prizes for top 3!"},
+  {keys:["chess"],reply:"♟️ Chess: ₹50. Rapid + Blitz. Individual. Open to all skill levels."},
+  {keys:["football","soccer"],reply:"⚽ Football 5-a-side: ₹120/person. Knockout. Prizes for winner & runner-up."},
+  {keys:["cricket"],reply:"🏏 Box Cricket: ₹120/person. Indoor 6-a-side. Exciting!"},
+  {keys:["fashion"],reply:"👗 Fashion Walk: ₹80. Individual & group categories. Industry judges!"},
+  {keys:["paper","presentation"],reply:"📄 Paper Presentation: ₹100. Submit abstract. Expert panel judging."},
+  {keys:["cancel","refund"],reply:"❌ Tickets are non-refundable after confirmation. Transfers allowed before May 15."},
+  {keys:["contact","help","support"],reply:"📧 techfest@veltech.edu.in\n📞 +91 98765 43210\n⏰ 9 AM–5 PM Mon–Fri"},
+];
+const SUGGESTIONS=["📋 Events","💰 Prices","📍 Venue","📅 Date","📞 Contact"];
+
+let chatMsgs=[{role:"bot",text:"👋 Hey! I'm **FestBot**. How can I help you today?",time:Date.now()}];
+let chatTyping=false;
+
+function getBotReply(msg){
+  const l=msg.toLowerCase();
+  for(const {keys,reply} of BOT_KB) if(keys.some(k=>l.includes(k))) return reply;
+  return "🤔 I'm not sure about that. Try asking about events, prices, venue, or contact info!";
+}
+function fmtTime(t){const d=new Date(t);return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')}
+function mdBold(s){return s.replace(/\*\*(.*?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>')}
+
+function renderChat(){
+  const el=document.getElementById('chat-msgs');
+  let html=chatMsgs.map(m=>`
+    <div class="chat-msg ${m.role}">
+      <div class="msg-bubble ${m.role}">${mdBold(m.text)}</div>
+      <div class="msg-time">${fmtTime(m.time)}</div>
+    </div>
+  `).join('');
+  if(chatTyping) html+=`<div class="typing-dots"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+  if(chatMsgs.length===1) html+=`<div class="suggestions">${SUGGESTIONS.map(s=>`<button class="sugg-btn" onclick="sendChatMsg('${s}')">${s}</button>`).join('')}</div>`;
+  el.innerHTML=html;
+  el.scrollTop=el.scrollHeight;
+}
+
+function toggleChat(){
+  const box=document.getElementById('chatbox');
+  box.classList.toggle('open');
+  if(box.classList.contains('open')) renderChat();
+}
+
+function sendChat(){
+  const inp=document.getElementById('chat-input');
+  sendChatMsg(inp.value);
+  inp.value='';
+}
+
+function sendChatMsg(msg){
+  if(!msg.trim()) return;
+  chatMsgs.push({role:'user',text:msg,time:Date.now()});
+  chatTyping=true;renderChat();
+  setTimeout(()=>{
+    chatTyping=false;
+    chatMsgs.push({role:'bot',text:getBotReply(msg),time:Date.now()});
+    renderChat();
+  },700+Math.random()*400);
+}
+
+// ══════════════════════════════════════════════
+//  TICKET AVAILABILITY DASHBOARD
+// ══════════════════════════════════════════════
+function getStatus(avail, total){
+  const pct = avail / total;
+  if(avail === 0) return {label:'SOLD OUT', cls:'status-sold'};
+  if(pct <= 0.15) return {label:'🔴 CRITICAL', cls:'status-critical'};
+  if(pct <= 0.40) return {label:'🟡 FILLING UP', cls:'status-filling'};
+  return {label:'🟢 AVAILABLE', cls:'status-available'};
+}
+
+function getAvailClass(avail, total){
+  const pct = avail / total;
+  if(avail === 0) return 'gone';
+  if(pct <= 0.15) return 'low';
+  if(pct <= 0.40) return 'mid';
+  return 'high';
+}
+
+function getBarColor(avail, total){
+  const pct = avail / total;
+  if(avail === 0) return '#333';
+  if(pct <= 0.15) return '#ef4444';
+  if(pct <= 0.40) return '#f59e0b';
+  return '#10b981';
+}
+
+function buildDashboardHTML(highlightIds){
+  const totalAllTickets = ALL_EVENTS.reduce((s,e)=>s+e.total,0);
+  const totalBooked = ALL_EVENTS.reduce((s,e)=>s+(e.total - availMap[e.id]),0);
+  const totalAvail = totalAllTickets - totalBooked;
+  const soldOutCount = ALL_EVENTS.filter(e=>availMap[e.id]===0).length;
+
+  const rows = ALL_EVENTS.map(ev=>{
+    const avail = availMap[ev.id];
+    const booked = ev.total - avail;
+    const pct = Math.round((avail/ev.total)*100);
+    const status = getStatus(avail, ev.total);
+    const availCls = getAvailClass(avail, ev.total);
+    const barColor = getBarColor(avail, ev.total);
+    const isHighlight = highlightIds && highlightIds.includes(ev.id);
+    return `<tr class="${isHighlight?'flash-row':''}" id="tad-row-${ev.id}">
+      <td>
+        <div class="tad-ev-cell">
+          <div class="tad-ev-icon">${ev.icon}</div>
+          <div>
+            <div class="tad-ev-name">${ev.name}</div>
+            <div class="tad-ev-dept">${ev.dept}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="cat-badge cat-${ev.type}">${ev.type==='tech'?'Technical':'Non-Technical'}</span></td>
+      <td class="tad-price">₹${ev.price}</td>
+      <td class="tad-total-n">${ev.total}</td>
+      <td class="tad-booked-n ${booked>0?'has-bookings':'no-bookings'}">${booked>0?'🔴 '+booked:booked}</td>
+      <td><span class="tad-avail-n ${availCls}" id="tad-avail-${ev.id}">${avail}</span></td>
+      <td><span class="status-badge ${status.cls}">${status.label}</span></td>
+      <td class="tad-progress-cell">
+        <div class="prog-bar-track">
+          <div class="prog-bar-fill" style="width:${pct}%;background:${barColor}"></div>
+        </div>
+        <div class="prog-pct">${pct}% left</div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  return `<div class="tad-header">
+    <div class="tad-title">
+      🎟️ Ticket Availability
+      <span class="tad-live"><span class="pulse-dot" style="background:#10b981"></span>Live</span>
+    </div>
+    <div class="tad-summary">
+      <div class="tad-sum-pill">Total Capacity <strong>${totalAllTickets}</strong></div>
+      <div class="tad-sum-pill">Booked <strong style="color:var(--red)">${totalBooked}</strong></div>
+      <div class="tad-sum-pill">Available <strong style="color:var(--green)">${totalAvail}</strong></div>
+      <div class="tad-sum-pill">Sold Out <strong style="color:#888">${soldOutCount}</strong></div>
+    </div>
+  </div>
+  <div class="tad-table-wrap">
+    <table class="tad-table">
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Total</th>
+          <th>Booked</th>
+          <th>Available</th>
+          <th>Status</th>
+          <th>Capacity</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
+
+function renderDashboards(highlightIds){
+  const html = buildDashboardHTML(highlightIds);
+  const d1 = document.getElementById('tad-events');
+  if(d1) d1.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+//  BOOKING HISTORY (localStorage)
+// ══════════════════════════════════════════════
+const HISTORY_KEY = 'techfest2026_bookings';
+
+function loadHistory(){
+  try{ return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]'); }
+  catch(e){ return []; }
+}
+
+function saveBookingToHistory(booking){
+  const history = loadHistory();
+  // Serialise events safely (strip any circular refs)
+  const safe = {
+    id: booking.id,
+    name: booking.name,
+    email: booking.email,
+    dept: booking.dept,
+    year: booking.year,
+    roll: booking.roll,
+    college: booking.college,
+    phone: booking.phone,
+    tickets: booking.tickets,
+    events: booking.events.map(e=>({id:e.id,icon:e.icon,name:e.name,type:e.type,price:e.price})),
+    total: booking.total,
+    note: booking.note,
+    bookedAt: booking.bookedAt
+  };
+  history.unshift(safe); // newest first
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+}
+
+function renderHistory(){
+  const container = document.getElementById('hist-body');
+  if(!container) return;
+  const q = (document.getElementById('hist-search')||{}).value||'';
+  const query = q.toLowerCase();
+  let history = loadHistory();
+  if(query) history = history.filter(b=>
+    b.name.toLowerCase().includes(query)||
+    b.id.toLowerCase().includes(query)||
+    b.phone.includes(query)||
+    b.roll.toLowerCase().includes(query)||
+    b.email.toLowerCase().includes(query)
+  );
+
+  if(history.length===0){
+    container.innerHTML=`
+      <div class="hist-empty">
+        <div class="hist-empty-icon">🗂️</div>
+        <div class="hist-empty-title">${query?'No results found':'No bookings yet'}</div>
+        <div class="hist-empty-sub">${query?'Try a different search term.':'Your confirmed bookings will appear here after you book an event.'}</div>
+      </div>`;
+    return;
+  }
+
+  const total = loadHistory().length;
+  const rows = history.map(b=>{
+    const evChips = b.events.map(e=>`<span class="hist-evchip ${e.type}">${e.icon} ${e.name}</span>`).join('');
+    return `<tr>
+      <td><div class="hist-bid">${b.id}</div><div class="hist-date">${b.bookedAt}</div></td>
+      <td><div class="hist-name">${b.name}</div><div class="hist-phone">${b.phone}</div></td>
+      <td><div style="font-size:12px;color:var(--muted)">${b.dept} · ${b.year}</div><div style="font-size:11px;color:var(--muted)">${b.college}</div></td>
+      <td><div class="hist-evchips">${evChips}</div></td>
+      <td style="text-align:center;font-size:13px;color:var(--muted)">${b.tickets}</td>
+      <td><div class="hist-total">₹${b.total.toLocaleString('en-IN')}</div></td>
+    </tr>`;
+  }).join('');
+
+  container.innerHTML=`
+    <div class="hist-count-pill">📋 ${total} booking${total!==1?'s':''} on record ${query?'· '+history.length+' shown':''}</div>
+    <div class="hist-table-wrap">
+      <table class="hist-table">
+        <thead>
+          <tr>
+            <th>Booking ID / Date</th>
+            <th>Attendee</th>
+            <th>Dept / College</th>
+            <th>Events</th>
+            <th style="text-align:center">Tickets</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+// Init
+renderEvents();
+renderDashboards();
+</script>
+</body>
+</html>
